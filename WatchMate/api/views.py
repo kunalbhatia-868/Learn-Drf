@@ -46,7 +46,7 @@ from rest_framework.views import APIView
 #         return Response(status=status.HTTP_204_NO_CONTENT)
         
 
-# Class Based Views  with same function as above just instead of if statemenet we use defined functions for methods
+# Class Based Views  with same function as above just instead of if statement we use the given functions
 
 class MovieListAV(APIView):
     
