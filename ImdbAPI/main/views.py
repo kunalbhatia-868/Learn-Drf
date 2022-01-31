@@ -1,9 +1,15 @@
+from pkgutil import ImpImporter
 from django.shortcuts import get_object_or_404
-from .models import WatchList,StreamPlatform
+from .models import Review, WatchList,StreamPlatform
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from .serializers import StreamPlatformSerializer, WatchListSerializer
+from rest_framework import generics,mixins
+from .serializers import (
+    ReviewSerializer,
+    StreamPlatformSerializer,
+    WatchListSerializer
+)
 # Create your views here.
 
 class WatchListAV(APIView):
@@ -77,4 +83,21 @@ class StreamPlatformDetailAV(APIView):
         platform=get_object_or_404(StreamPlatform,id=pk)
         platform.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
-                
+
+
+class ReviewListAV(mixins.ListModelMixin,mixins.CreateModelMixin,generics.GenericAPIView):
+    queryset=Review.objects.all()
+    serializer_class=ReviewSerializer
+    
+    def get(self,request,*args,**kwargs):
+        return self.list(request,*args,**kwargs)
+    
+    def post(self,request,*args,**kwargs):
+        return self.create(request,*args,**kwargs)
+    
+class ReviewDetailAV(mixins.RetrieveModelMixin,mixins.UpdateModelMixin,mixins.DestroyModelMixin,generics.GenericAPIView):
+    queryset=Review.objects.all()
+    serializer_class=ReviewSerializer
+    
+    def get(self,request,*args,**kwargs):
+        return self.retrieve(request,*args,**kwargs)
