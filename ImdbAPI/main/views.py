@@ -4,7 +4,7 @@ from .models import Review, WatchList,StreamPlatform
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from rest_framework import generics,mixins
+from rest_framework import generics,mixins,viewsets
 from .serializers import (
     ReviewSerializer,
     StreamPlatformSerializer,
@@ -49,7 +49,21 @@ class WatchListDetailAV(APIView):
         watchlist.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
     
-    
+#Helps define all the list detail create view under only one view and handled using routers
+#no need to create multiple urls as well
+#Not Recoommended with simple requirements ,can be used in complex projects to decrease size of code
+class StreamPlatformViewSetAV(viewsets.ViewSet):
+    def list(self, request):
+        queryset = StreamPlatform.objects.all()
+        serializer = StreamPlatformSerializer(queryset, many=True)
+        return Response(serializer.data)
+
+    def retrieve(self, request, pk=None):
+        queryset = StreamPlatform.objects.all()
+        user = get_object_or_404(queryset, pk=pk)
+        serializer = StreamPlatformSerializer(user)
+        return Response(serializer.data)
+
 class StreamPlatformListAV(APIView):
     def get(self,request):
         platforms=StreamPlatform.objects.all()
