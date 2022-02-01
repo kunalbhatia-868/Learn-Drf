@@ -85,19 +85,46 @@ class StreamPlatformDetailAV(APIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-class ReviewListAV(mixins.ListModelMixin,mixins.CreateModelMixin,generics.GenericAPIView):
+#Created using mixins
+# class ReviewListAV(mixins.ListModelMixin,mixins.CreateModelMixin,generics.GenericAPIView):
+#     queryset=Review.objects.all()
+#     serializer_class=ReviewSerializer
+    
+#     def get(self,request,*args,**kwargs):
+#         return self.list(request,*args,**kwargs)
+    
+#     def post(self,request,*args,**kwargs):
+#         return self.create(request,*args,**kwargs)
+    
+# class ReviewDetailAV(mixins.RetrieveModelMixin,mixins.UpdateModelMixin,mixins.DestroyModelMixin,generics.GenericAPIView):
+#     queryset=Review.objects.all()
+#     serializer_class=ReviewSerializer
+    
+#     def get(self,request,*args,**kwargs):
+#         return self.retrieve(request,*args,**kwargs)
+# lets create same using Concrete View Classes from generic 
+
+
+class ReviewListAV(generics.ListAPIView):
+    # queryset=Review.objects.all()             #Added get query set so commented
+    serializer_class=ReviewSerializer
+    
+    def get_queryset(self):
+        pk= self.kwargs['pk']               # pk for the watchlist whose reviw to show
+        return Review.objects.filter(watchlist=pk)
+    
+class ReviewDetailAV(generics.RetrieveUpdateDestroyAPIView):
     queryset=Review.objects.all()
     serializer_class=ReviewSerializer
     
-    def get(self,request,*args,**kwargs):
-        return self.list(request,*args,**kwargs)
+
+class ReviewCreateAV(generics.CreateAPIView):
+    serializer_class=ReviewSerializer  
     
-    def post(self,request,*args,**kwargs):
-        return self.create(request,*args,**kwargs)
-    
-class ReviewDetailAV(mixins.RetrieveModelMixin,mixins.UpdateModelMixin,mixins.DestroyModelMixin,generics.GenericAPIView):
-    queryset=Review.objects.all()
-    serializer_class=ReviewSerializer
-    
-    def get(self,request,*args,**kwargs):
-        return self.retrieve(request,*args,**kwargs)
+    def perform_create(self, serializer):
+        pk=self.kwargs['pk']
+        print(pk)
+        watchlist=WatchList.objects.get(id=pk)
+        print(watchlist)
+        serializer.save(watchlist=watchlist)
+        
