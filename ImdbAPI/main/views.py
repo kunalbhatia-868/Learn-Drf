@@ -10,6 +10,7 @@ from .serializers import (
     StreamPlatformSerializer,
     WatchListSerializer
 )
+from rest_framework.exceptions import ValidationError
 # Create your views here.
 
 class WatchListAV(APIView):
@@ -52,17 +53,34 @@ class WatchListDetailAV(APIView):
 #Helps define all the list detail create view under only one view and handled using routers
 #no need to create multiple urls as well
 #Not Recoommended with simple requirements ,can be used in complex projects to decrease size of code
-class StreamPlatformViewSetAV(viewsets.ViewSet):
-    def list(self, request):
-        queryset = StreamPlatform.objects.all()
-        serializer = StreamPlatformSerializer(queryset, many=True)
-        return Response(serializer.data)
+# class StreamPlatformViewSetAV(viewsets.ViewSet):
+#     def list(self, request):
+#         queryset = StreamPlatform.objects.all()
+#         serializer = StreamPlatformSerializer(queryset, many=True)
+#         return Response(serializer.data)
 
-    def retrieve(self, request, pk=None):
-        queryset = StreamPlatform.objects.all()
-        user = get_object_or_404(queryset, pk=pk)
-        serializer = StreamPlatformSerializer(user)
-        return Response(serializer.data)
+#     def retrieve(self, request, pk=None):
+#         queryset = StreamPlatform.objects.all()
+#         user = get_object_or_404(queryset, pk=pk)
+#         serializer = StreamPlatformSerializer(user)
+#         return Response(serializer.data)
+    
+#     def create(self,request):
+#         serializer=StreamPlatformSerializer(data=request.data)
+#         if serializer.is_valid():
+#             serializer.save()
+#             return Response(serializer.data,status=status.HTTP_201_CREATED)        
+#         else:
+#             return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
+
+#For ModelViewSet
+# all methof get post patch and delete in 3 lines of code
+
+class StreamPlatformViewSetAV(viewsets.ModelViewSet):
+    queryset=StreamPlatform.objects.all()
+    serializer_class=StreamPlatformSerializer
+
+# User viewsets.ReadonlyView set for only get permission
 
 class StreamPlatformListAV(APIView):
     def get(self,request):
@@ -135,10 +153,17 @@ class ReviewDetailAV(generics.RetrieveUpdateDestroyAPIView):
 class ReviewCreateAV(generics.CreateAPIView):
     serializer_class=ReviewSerializer  
     
+    def get_queryset(self):
+        return Review.objects.all()
+    
     def perform_create(self, serializer):
         pk=self.kwargs['pk']
-        print(pk)
         watchlist=WatchList.objects.get(id=pk)
-        print(watchlist)
-        serializer.save(watchlist=watchlist)
+        review_user=self.request.user
+        review_qs=Review.objects.filter(review_user=review_user,watchlist=watchlist)
+        if review_qs.exists():
+            raise ValidationError("You have already review this movie")
+        else:    
+            serializer.save(watchlist=watchlist,review_user=review_user)
+            
         
