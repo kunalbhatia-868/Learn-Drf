@@ -10,7 +10,9 @@ from .serializers import (
     StreamPlatformSerializer,
     WatchListSerializer
 )
+from.permissions import AdminOrReadOnly, ReviewOwnerOrReadOnly
 from rest_framework.exceptions import ValidationError
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
 # Create your views here.
 
 class WatchListAV(APIView):
@@ -140,6 +142,8 @@ class StreamPlatformDetailAV(APIView):
 class ReviewListAV(generics.ListAPIView):
     # queryset=Review.objects.all()             #Added get query set so commented
     serializer_class=ReviewSerializer
+    # permission_classes=[IsAuthenticatedOrReadOnly]    #Inbuild Permission Classes
+    permission_classes=[AdminOrReadOnly]            #Custom Permission class
     
     def get_queryset(self):
         pk= self.kwargs['pk']               # pk for the watchlist whose reviw to show
@@ -148,6 +152,8 @@ class ReviewListAV(generics.ListAPIView):
 class ReviewDetailAV(generics.RetrieveUpdateDestroyAPIView):
     queryset=Review.objects.all()
     serializer_class=ReviewSerializer
+    permission_classes=[ReviewOwnerOrReadOnly]
+    
     
 
 class ReviewCreateAV(generics.CreateAPIView):

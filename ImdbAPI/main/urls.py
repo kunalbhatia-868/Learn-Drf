@@ -12,7 +12,7 @@ from .views import (
 )
 
 router=DefaultRouter()
-router.register('platform',StreamPlatformViewSetAV,basename="streamplatform")
+router.register('platforms',StreamPlatformViewSetAV,basename="streamplatform")
 
 urlpatterns=[
     path('watchlists/',WatchListAV.as_view(),name="watchlist-list"),
