@@ -12,7 +12,7 @@ from .serializers import (
 )
 from.permissions import AdminOrReadOnly, ReviewOwnerOrReadOnly
 from rest_framework.exceptions import ValidationError
-from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from rest_framework.permissions import IsAuthenticated
 # Create your views here.
 
 class WatchListAV(APIView):
@@ -143,7 +143,7 @@ class ReviewListAV(generics.ListAPIView):
     # queryset=Review.objects.all()             #Added get query set so commented
     serializer_class=ReviewSerializer
     # permission_classes=[IsAuthenticatedOrReadOnly]    #Inbuild Permission Classes
-    permission_classes=[AdminOrReadOnly]            #Custom Permission class
+    permission_classes=[IsAuthenticated]            #Custom Permission class
     
     def get_queryset(self):
         pk= self.kwargs['pk']               # pk for the watchlist whose reviw to show
