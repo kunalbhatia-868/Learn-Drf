@@ -38,7 +38,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
-    'main'
+    'rest_framework.authtoken',
+    'main',
+    'user_app',
 ]
 
 MIDDLEWARE = [
@@ -124,16 +126,18 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# REST_FRAMEWORK = {
-#     'DEFAULT_PERMISSION_CLASSES': [
+
+REST_FRAMEWORK = {
+#      'DEFAULT_PERMISSION_CLASSES': [
 #         'rest_framework.permissions.IsAuthenticated',
 #     ]
-# } 
-# To provide a login permission for all the urls
-
-#basic authentication
-REST_FRAMEWORK = {
+        #To provide a login permission for all the urls
+#       'DEFAULT_AUTHENTICATION_CLASSES': [
+#         'rest_framework.authentication.BasicAuthentication',
+#     ]
+        #basic authentication
+    
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
     ]
 }
