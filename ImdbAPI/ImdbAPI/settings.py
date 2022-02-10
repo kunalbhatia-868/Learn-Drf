@@ -137,7 +137,17 @@ REST_FRAMEWORK = {
 #     ]
         #basic authentication
     
-    'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework.authentication.TokenAuthentication',
-    ]
+    # 'DEFAULT_AUTHENTICATION_CLASSES': [
+    #     'rest_framework.authentication.TokenAuthentication',
+    # ]
+        #for token authentication
+        
+      'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    )
+      #for jwt authentication  
 }
+
+SIMPLE_JWT={
+    'ROTATE_REFRESH_TOKENS':True
+}#To get a new refresh token with new access token 

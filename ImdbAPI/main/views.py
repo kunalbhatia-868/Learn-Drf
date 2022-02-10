@@ -10,13 +10,13 @@ from .serializers import (
     StreamPlatformSerializer,
     WatchListSerializer
 )
-from.permissions import AdminOrReadOnly, ReviewOwnerOrReadOnly
+from.permissions import IsAdminOrReadOnly, IsReviewOwnerOrReadOnly
 from rest_framework.exceptions import ValidationError
 from rest_framework.permissions import IsAuthenticated
 # Create your views here.
 
 class WatchListAV(APIView):
-    
+    permission_classes=[IsAdminOrReadOnly]
     def get(self,request):
         watchlists=WatchList.objects.all()
         serializer=WatchListSerializer(watchlists,many=True)
@@ -32,6 +32,7 @@ class WatchListAV(APIView):
         
         
 class WatchListDetailAV(APIView):
+    permission_classes = [IsAdminOrReadOnly]
     
     def get(self,request,pk):
         watchlist=get_object_or_404(WatchList,id=pk)
@@ -81,7 +82,7 @@ class WatchListDetailAV(APIView):
 class StreamPlatformViewSetAV(viewsets.ModelViewSet):
     queryset=StreamPlatform.objects.all()
     serializer_class=StreamPlatformSerializer
-
+    permission_classes = [IsAdminOrReadOnly]
 # User viewsets.ReadonlyView set for only get permission
 
 class StreamPlatformListAV(APIView):
@@ -99,6 +100,7 @@ class StreamPlatformListAV(APIView):
             return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
         
 class StreamPlatformDetailAV(APIView):
+    permission_classes = [IsAdminOrReadOnly]
     def get(self,request,pk):
         platform=get_object_or_404(StreamPlatform,id=pk)
         serializer=StreamPlatformSerializer(platform)
@@ -152,13 +154,11 @@ class ReviewListAV(generics.ListAPIView):
 class ReviewDetailAV(generics.RetrieveUpdateDestroyAPIView):
     queryset=Review.objects.all()
     serializer_class=ReviewSerializer
-    permission_classes=[ReviewOwnerOrReadOnly]
+    permission_classes=[IsReviewOwnerOrReadOnly]
     
-    
-
 class ReviewCreateAV(generics.CreateAPIView):
     serializer_class=ReviewSerializer  
-    
+    permission_classes = [IsAuthenticated]
     def get_queryset(self):
         return Review.objects.all()
     
