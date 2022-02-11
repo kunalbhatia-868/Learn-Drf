@@ -154,9 +154,10 @@ REST_FRAMEWORK = {
     # ],
     'DEFAULT_THROTTLE_RATES': {
         'anon': '2/day',
-        'user': '5/day',
-        'review-create':'2/day',
-        'review-list':'10/day'
+        'user': '100/day',
+        'review-create':'10/day',
+        'review-list':'100/day',
+        'review-detail':'20/day'
     }   
     #to specify throttling rate for global setting else set in views
     

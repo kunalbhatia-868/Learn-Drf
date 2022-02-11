@@ -15,6 +15,7 @@ from rest_framework.exceptions import ValidationError
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.throttling import UserRateThrottle,AnonRateThrottle
 from .throttling import ReviewCreateThrottle,ReviewListThrottle
+from rest_framework.throttling import ScopedRateThrottle
 # Create your views here.
 
 class WatchListAV(APIView):
@@ -159,7 +160,9 @@ class ReviewDetailAV(generics.RetrieveUpdateDestroyAPIView):
     queryset=Review.objects.all()
     serializer_class=ReviewSerializer
     permission_classes=[IsReviewOwnerOrReadOnly]
-    throttle_classes=[UserRateThrottle,AnonRateThrottle]
+    # throttle_classes=[UserRateThrottle,AnonRateThrottle]
+    throttle_classes=[ScopedRateThrottle]
+    throttle_scope='review-detail'          #dd scope for thottle in views only and define the rate in seetings.py
     
 class ReviewCreateAV(generics.CreateAPIView):
     serializer_class=ReviewSerializer  
