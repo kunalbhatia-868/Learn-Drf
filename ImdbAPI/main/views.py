@@ -13,6 +13,8 @@ from .serializers import (
 from.permissions import IsAdminOrReadOnly, IsReviewOwnerOrReadOnly
 from rest_framework.exceptions import ValidationError
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.throttling import UserRateThrottle,AnonRateThrottle
+from .throttling import ReviewCreateThrottle,ReviewListThrottle
 # Create your views here.
 
 class WatchListAV(APIView):
@@ -145,7 +147,9 @@ class ReviewListAV(generics.ListAPIView):
     # queryset=Review.objects.all()             #Added get query set so commented
     serializer_class=ReviewSerializer
     # permission_classes=[IsAuthenticatedOrReadOnly]    #Inbuild Permission Classes
-    permission_classes=[IsAuthenticated]            #Custom Permission class
+    # permission_classes=[IsAuthenticated]            #Custom Permission class
+    # throttle_classes=[UserRateThrottle,AnonRateThrottle]
+    throttle_classes=[ReviewListThrottle]#for scope throttle    
     
     def get_queryset(self):
         pk= self.kwargs['pk']               # pk for the watchlist whose reviw to show
@@ -155,10 +159,13 @@ class ReviewDetailAV(generics.RetrieveUpdateDestroyAPIView):
     queryset=Review.objects.all()
     serializer_class=ReviewSerializer
     permission_classes=[IsReviewOwnerOrReadOnly]
+    throttle_classes=[UserRateThrottle,AnonRateThrottle]
     
 class ReviewCreateAV(generics.CreateAPIView):
     serializer_class=ReviewSerializer  
     permission_classes = [IsAuthenticated]
+    throttle_classes=[ReviewCreateThrottle]#for scope throttle    
+
     def get_queryset(self):
         return Review.objects.all()
     

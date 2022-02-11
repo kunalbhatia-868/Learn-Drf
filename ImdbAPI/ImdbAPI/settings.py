@@ -142,10 +142,24 @@ REST_FRAMEWORK = {
     # ]
         #for token authentication
         
-      'DEFAULT_AUTHENTICATION_CLASSES': (
+      'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework_simplejwt.authentication.JWTAuthentication',
-    )
-      #for jwt authentication  
+      ],
+      #for jwt authentication 
+      
+      
+    # 'DEFAULT_THROTTLE_CLASSES': [
+    #     'rest_framework.throttling.AnonRateThrottle',
+    #     'rest_framework.throttling.UserRateThrottle'
+    # ],
+    'DEFAULT_THROTTLE_RATES': {
+        'anon': '2/day',
+        'user': '5/day',
+        'review-create':'2/day',
+        'review-list':'10/day'
+    }   
+    #to specify throttling rate for global setting else set in views
+    
 }
 
 SIMPLE_JWT={
