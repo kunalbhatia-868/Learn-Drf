@@ -1,6 +1,7 @@
 from rest_framework.routers import DefaultRouter
 from django.urls import path,include
 from .views import (
+    UserReview,
     ReviewListAV,
     ReviewDetailAV,
     ReviewCreateAV,
@@ -23,5 +24,8 @@ urlpatterns=[
     path('watchlists/<int:pk>/review-create/',ReviewCreateAV.as_view(),name="review-create"),
     path('watchlists/<int:pk>/reviews/',ReviewListAV.as_view(),name="review-list"),
     path('watchlists/reviews/<int:pk>',ReviewDetailAV.as_view(),name="review-detail"),
+    # path('watchlists/reviews/<str:username>/',UserReview.as_view(),name="user-review-detail")
+    # for urlfiltering  now for query filtering
+    path('watchlists/reviews/',UserReview.as_view(),name="user-review-detail")
     
 ]

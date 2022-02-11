@@ -18,6 +18,23 @@ from .throttling import ReviewCreateThrottle,ReviewListThrottle
 from rest_framework.throttling import ScopedRateThrottle
 # Create your views here.
 
+#implementing url filtering
+class UserReview(generics.ListAPIView):
+    serializer_class=ReviewSerializer
+    # throttle_classes=[ReviewListThrottle,AnonRateThrottle] 
+
+    # def get_queryset(self):
+    #     username=self.kwargs['username']
+    #     return Review.objects.filter(review_user__username=username)
+    # Filtering Against URL
+    
+    def get_queryset(self):
+        username=self.request.query_params.get('username',None)
+        return Review.objects.filter(review_user__username=username)
+        
+    
+    # Filtering against query parameter
+    
 class WatchListAV(APIView):
     permission_classes=[IsAdminOrReadOnly]
     def get(self,request):
