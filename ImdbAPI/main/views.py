@@ -13,6 +13,8 @@ from .serializers import (
 from.permissions import IsAdminOrReadOnly, IsReviewOwnerOrReadOnly
 from rest_framework.exceptions import ValidationError
 from rest_framework.permissions import IsAuthenticated
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.filters import SearchFilter,OrderingFilter
 from rest_framework.throttling import UserRateThrottle,AnonRateThrottle
 from .throttling import ReviewCreateThrottle,ReviewListThrottle
 from rest_framework.throttling import ScopedRateThrottle
@@ -168,6 +170,9 @@ class ReviewListAV(generics.ListAPIView):
     # permission_classes=[IsAuthenticated]            #Custom Permission class
     # throttle_classes=[UserRateThrottle,AnonRateThrottle]
     throttle_classes=[ReviewListThrottle]#for scope throttle    
+    filter_backends=[DjangoFilterBackend]
+    filterset_fields=['review_user__username','active']
+    # for generic filtering
     
     def get_queryset(self):
         pk= self.kwargs['pk']               # pk for the watchlist whose reviw to show
@@ -205,4 +210,13 @@ class ReviewCreateAV(generics.CreateAPIView):
             watchlist.save()
             serializer.save(watchlist=watchlist,review_user=review_user)
             
-        
+# To test out search with filtering
+class WatchListSearch(generics.ListAPIView):
+    queryset=WatchList.objects.all()
+    serializer_class=WatchListSerializer
+    # throttle_classes=[ReviewListThrottle]
+    # filter_backends=[DjangoFilterBackend]
+    # filter_backends=[SearchFilter]#for search filter
+    # search_fields_fields=['title','platform__name']
+    filter_backends=[OrderingFilter]
+    ordering_fields=['avg_rating']

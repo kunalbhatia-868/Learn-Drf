@@ -9,7 +9,8 @@ from .views import (
     WatchListDetailAV,
     StreamPlatformListAV,
     StreamPlatformDetailAV,
-    StreamPlatformViewSetAV
+    StreamPlatformViewSetAV,
+    WatchListSearch
 )
 
 router=DefaultRouter()
@@ -26,6 +27,6 @@ urlpatterns=[
     path('watchlists/reviews/<int:pk>',ReviewDetailAV.as_view(),name="review-detail"),
     # path('watchlists/reviews/<str:username>/',UserReview.as_view(),name="user-review-detail")
     # for urlfiltering  now for query filtering
-    path('watchlists/reviews/',UserReview.as_view(),name="user-review-detail")
-    
+    path('watchlists/reviews/',UserReview.as_view(),name="user-review-detail"),
+    path('watchlist/',WatchListSearch.as_view(),name="watchlist-search")
 ]
