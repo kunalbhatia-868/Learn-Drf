@@ -1,4 +1,4 @@
-from rest_framework.pagination import PageNumberPagination
+from rest_framework.pagination import PageNumberPagination,LimitOffsetPagination
 
 class WatchListPagination(PageNumberPagination):
     page_size=1         #give pages on /?page=2 or 3 to chnage it use params
@@ -7,3 +7,11 @@ class WatchListPagination(PageNumberPagination):
     max_page_size=2                     #to set limit page size control from client
     #to load last /?page p=last
     last_page_strings="end"     #to chnage last page name
+    
+class WatchListLimitOffsetPagination(LimitOffsetPagination):
+    default_limit=2         #default page size  
+    #offset mean show 10  elment after 7(offset) elements
+    max_limit=3         #to set max mimit from server
+    #we have to params limit,offest to change name
+    limit_query_param='limit'
+    offset_query_param='after'

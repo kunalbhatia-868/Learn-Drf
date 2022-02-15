@@ -1,5 +1,5 @@
 from django.shortcuts import get_object_or_404
-from .pagination import WatchListPagination
+from .pagination import WatchListPagination,WatchListLimitOffsetPagination
 from .models import Review, WatchList,StreamPlatform
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -222,4 +222,4 @@ class WatchListSearch(generics.ListAPIView):
     # search_fields_fields=['title','platform__name']
     filter_backends=[OrderingFilter]
     ordering_fields=['avg_rating']
-    pagination_class=WatchListPagination
+    pagination_class=WatchListLimitOffsetPagination
