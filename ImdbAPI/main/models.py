@@ -18,7 +18,7 @@ class WatchList(models.Model):
     active=models.BooleanField(default=True)
     avg_rating=models.FloatField(default=0)
     number_rating=models.PositiveIntegerField(default=0)
-    created_on=models.DateTimeField(auto_now_add=True)
+    created=models.DateTimeField(auto_now_add=True)
     
     
     def __str__(self):
@@ -30,8 +30,8 @@ class Review(models.Model):
     rating=models.PositiveIntegerField(validators=[MinValueValidator(1),MaxValueValidator(5)])  
     description=models.CharField(max_length=200,null=True)
     watchlist=models.ForeignKey(WatchList,on_delete=models.CASCADE,related_name="reviews")
-    created_on=models.DateTimeField(auto_now_add=True)    
-    updated_on=models.DateTimeField(auto_now=True)
+    created=models.DateTimeField(auto_now_add=True)    
+    updated=models.DateTimeField(auto_now=True)
     active=models.BooleanField(default=True)            # To Turn Review OFF
     
     def __str__(self):

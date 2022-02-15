@@ -165,6 +165,10 @@ REST_FRAMEWORK = {
     # 'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
     # 'PAGE_SIZE': 2,
     # Global setting for pagination for page size to 2 only works for generic api not APIVIEW
+
+    'DEFAULT_RENDERER_CLASSES':(
+        'rest_framework.renderers.JSONRenderer',
+    )
 }
 
 SIMPLE_JWT={
