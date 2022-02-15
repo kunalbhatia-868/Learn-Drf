@@ -1,5 +1,5 @@
-from pkgutil import ImpImporter
 from django.shortcuts import get_object_or_404
+from .pagination import WatchListPagination
 from .models import Review, WatchList,StreamPlatform
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -39,6 +39,8 @@ class UserReview(generics.ListAPIView):
     
 class WatchListAV(APIView):
     permission_classes=[IsAdminOrReadOnly]
+    pagination_class=WatchListPagination    #Will Not Work on API Vie only for generic classes
+    
     def get(self,request):
         watchlists=WatchList.objects.all()
         serializer=WatchListSerializer(watchlists,many=True)
@@ -220,3 +222,4 @@ class WatchListSearch(generics.ListAPIView):
     # search_fields_fields=['title','platform__name']
     filter_backends=[OrderingFilter]
     ordering_fields=['avg_rating']
+    pagination_class=WatchListPagination

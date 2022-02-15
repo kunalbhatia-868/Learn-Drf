@@ -159,9 +159,12 @@ REST_FRAMEWORK = {
         'review-create':'10/day',
         'review-list':'100/day',
         'review-detail':'20/day'
-    }   
+    },
     #to specify throttling rate for global setting else set in views
     
+    # 'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
+    # 'PAGE_SIZE': 2,
+    # Global setting for pagination for page size to 2 only works for generic api not APIVIEW
 }
 
 SIMPLE_JWT={
